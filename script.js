@@ -64,11 +64,13 @@ const nextBtn = document.getElementById('next-btn');
 const scoreBox = document.getElementById('score-container');
 const scoreText = document.getElementById('score');
 const restartBtn = document.getElementById('restart-btn');
+const highScoreDisplay = document.getElementById('high-score');
 
 let qIndex = 0;
 let score = 0;
 let userAnswer = null;
 let shuffledQuestions = [];
+let highScore = localStorage.getItem('highScore') || 0;
 
 function shuffleArray(array) {
     let currentIndex = array.length;
@@ -90,6 +92,9 @@ function shuffleArray(array) {
 
 // Initialize quiz
 function init() {
+    // Display current high score
+    highScoreDisplay.textContent = highScore + ' / ' + quizData.length;
+    
     shuffledQuestions = shuffleArray(quizData);
     qIndex = 0;
     score = 0;
@@ -169,13 +174,32 @@ function goToNext() {
     }
 }
 
+function updateHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+        return true;
+    }
+    return false;
+}
+
 // Show final score
 function showFinalScore() {
     clearQuestion();
     qContainer.classList.add('hide');
     nextBtn.classList.add('hide');
     scoreBox.classList.remove('hide');
-    scoreText.innerHTML = score + " / " + shuffledQuestions.length;
+    
+    const isNewHighScore = updateHighScore();
+    
+    let resultHTML = `<p>Your Score: ${score} / ${shuffledQuestions.length}</p>`;
+    resultHTML += `<p>High Score: ${highScore} / ${shuffledQuestions.length}</p>`;
+    
+    if (isNewHighScore) {
+        resultHTML += '<p class="new-high-score">New High Score!</p>';
+    }
+    
+    scoreText.innerHTML = resultHTML;
     
     saveToStorage();
 }
@@ -188,7 +212,8 @@ function saveToStorage() {
     saved.push({
         date: now,
         score: score,
-        total: shuffledQuestions.length
+        total: shuffledQuestions.length,
+        isHighScore: (score === highScore)
     });
     
     localStorage.setItem('quizScores', JSON.stringify(saved));
