@@ -187,7 +187,24 @@ body::before {
     100% { transform: scale(1); }
 }
 
-.next-btn, .restart-btn {
+.next-btn {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px 25px;
+    margin-top: 20px;
+    width: 100%;
+    background: linear-gradient(to right, #FF9900, #F57C00);
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+}
+
+.next-btn:hover {
+    background: linear-gradient(to right, #F57C00, #E65100);
+    box-shadow: 0 6px 18px rgba(255, 153, 0, 0.4);
+}
+
+.restart-btn {
     font-size: 18px;
     font-weight: bold;
     padding: 14px 25px;
